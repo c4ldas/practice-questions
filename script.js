@@ -18,7 +18,7 @@ function startQuiz() {
   showQuestion();
 }
 
-function showQuestion() {
+/* function showQuestion() {
   const q = questions[current];
   selected.clear();
   document.getElementById('question').innerHTML = `<h3>Q${current + 1}. ${q.question}</h3>`;
@@ -35,7 +35,51 @@ function showQuestion() {
 
   document.getElementById('nextBtn').style.display = 'none';
   document.getElementById('submitBtn').style.display = 'inline-block';
+} */
+
+function showQuestion() {
+  const q = questions[current];
+  selected.clear();
+
+  document.getElementById('question').innerHTML = `<h3>Q${current + 1}. ${q.question}</h3>`;
+
+  const opts = document.getElementById('options');
+  opts.innerHTML = '';
+
+  if (q.type === 'fill-in') {
+    // Render text input
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'fillInput';
+    input.placeholder = 'Type your answer here...';
+    Object.assign(input.style, {
+      width: '100%',
+      padding: '8px',
+      fontSize: '1em',
+      borderRadius: '6px',
+      border: '1px solid #30363d',
+      background: '#0d1117',
+      color: '#e6edf3'
+    });
+    opts.appendChild(input);
+    input.focus();
+  } else {
+    // Render multiple-choice
+    q.options.forEach((opt, i) => {
+      const div = document.createElement('div');
+      div.classList.add('option');
+      div.innerHTML = opt;
+      div.onclick = () => toggleSelect(i, div);
+      opts.appendChild(div);
+    });
+  }
+
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('submitBtn').style.display = 'inline-block';
 }
+
+
+
 
 function toggleSelect(i, el) {
   if (selected.has(i)) {
@@ -47,7 +91,7 @@ function toggleSelect(i, el) {
   }
 }
 
-function submitAnswer() {
+/* function submitAnswer() {
   const q = questions[current];
   const opts = document.querySelectorAll('.option');
   const correctAnswers = Array.isArray(q.answers) ? q.answers : [q.answer];
@@ -69,7 +113,59 @@ function submitAnswer() {
 
   document.getElementById('submitBtn').style.display = 'none';
   document.getElementById('nextBtn').style.display = 'inline-block';
+} */
+
+
+function submitAnswer() {
+  const q = questions[current];
+  const opts = document.querySelectorAll('.option');
+  const optionsDiv = document.getElementById('options');
+
+  // 🧠 Fill-in question logic
+  if (q.type === 'fill-in') {
+    const input = document.getElementById('fillInput');
+    const userInput = input.value.trim();
+    const correctAnswer = q.answer.trim();
+
+    const feedback = document.createElement('p');
+    feedback.style.marginTop = '10px';
+
+    if (userInput.toLowerCase() === correctAnswer.toLowerCase()) {
+      feedback.innerHTML = `<span style="color: #3fb950;">✅ Correct!</span>`;
+      score++;
+    } else {
+      feedback.innerHTML = `<span style="color: #f85149;">❌ Wrong.</span><br>Correct answer: <code>${correctAnswer}</code>`;
+    }
+
+    // Disable input after submission
+    input.disabled = true;
+    optionsDiv.appendChild(feedback);
+
+  } else {
+    // 🧠 Multiple-choice logic
+    const correctAnswers = Array.isArray(q.answers) ? q.answers : [q.answer];
+
+    opts.forEach((o, idx) => {
+      o.onclick = null;
+      if (correctAnswers.includes(idx)) {
+        o.classList.add('correct');
+      } else if (selected.has(idx)) {
+        o.classList.add('wrong');
+      }
+    });
+
+    const correctSet = new Set(correctAnswers);
+    const selectedSet = new Set(selected);
+    if (setsEqual(correctSet, selectedSet)) {
+      score++;
+    }
+  }
+
+  // Switch buttons
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-block';
 }
+
 
 function setsEqual(a, b) {
   if (a.size !== b.size) return false;
