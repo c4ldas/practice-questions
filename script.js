@@ -18,25 +18,6 @@ function startQuiz() {
   showQuestion();
 }
 
-/* function showQuestion() {
-  const q = questions[current];
-  selected.clear();
-  document.getElementById('question').innerHTML = `<h3>Q${current + 1}. ${q.question}</h3>`;
-
-  const opts = document.getElementById('options');
-  opts.innerHTML = '';
-  q.options.forEach((opt, i) => {
-    const div = document.createElement('div');
-    div.classList.add('option');
-    div.innerHTML = opt;
-    div.onclick = () => toggleSelect(i, div);
-    opts.appendChild(div);
-  });
-
-  document.getElementById('nextBtn').style.display = 'none';
-  document.getElementById('submitBtn').style.display = 'inline-block';
-} */
-
 function showQuestion() {
   const q = questions[current];
   selected.clear();
@@ -78,9 +59,6 @@ function showQuestion() {
   document.getElementById('submitBtn').style.display = 'inline-block';
 }
 
-
-
-
 function toggleSelect(i, el) {
   if (selected.has(i)) {
     selected.delete(i);
@@ -90,31 +68,6 @@ function toggleSelect(i, el) {
     el.style.border = '2px solid #58a6ff';
   }
 }
-
-/* function submitAnswer() {
-  const q = questions[current];
-  const opts = document.querySelectorAll('.option');
-  const correctAnswers = Array.isArray(q.answers) ? q.answers : [q.answer];
-
-  opts.forEach((o, idx) => {
-    o.onclick = null;
-    if (correctAnswers.includes(idx)) {
-      o.classList.add('correct');
-    } else if (selected.has(idx)) {
-      o.classList.add('wrong');
-    }
-  });
-
-  const correctSet = new Set(correctAnswers);
-  const selectedSet = new Set(selected);
-  if (setsEqual(correctSet, selectedSet)) {
-    score++;
-  }
-
-  document.getElementById('submitBtn').style.display = 'none';
-  document.getElementById('nextBtn').style.display = 'inline-block';
-} */
-
 
 function submitAnswer() {
   const q = questions[current];
@@ -263,4 +216,5 @@ window.addEventListener('load', () => {
   numInput.addEventListener('keydown', handleEnterToStart);
   document.getElementById('setup').addEventListener('keydown', handleEnterToStart);
 });
+
 
