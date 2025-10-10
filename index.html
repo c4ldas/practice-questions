@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Terraform Associate Practice Quiz</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <div class="container">
+    <h1>Terraform Associate Practice Quiz</h1>
+    <div id="setup">
+      <label>Select number of questions: <input type="number" id="numQuestions" min="1" max="100"
+          value="57" /></label><br /><br />
+      <button id="startBtn">Start Quiz</button>
+      <small style="color:#8b949e;">Or press Enter to start</small>
+    </div>
+    <div id="quiz" class="hidden">
+      <div id="question" class="question"></div>
+      <div id="options"></div>
+      <div id="controls">
+        <button id="nextBtn" class="hidden">Next Question</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="terraform_practice_questions_001.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
