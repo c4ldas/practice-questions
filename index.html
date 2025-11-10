@@ -4,29 +4,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Terraform Associate Practice Quiz</title>
+  <title>Practice Quiz</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
   <div class="container">
-    <h1>Terraform Associate Practice Quiz</h1>
+    <h1>Practice Quiz</h1>
     <div id="setup">
-      <label>Select number of questions: <input type="number" id="numQuestions" min="1" max="400"
-          value="313" /></label><br /><br />
+      <label>Select topic:
+        <select id="topicSelect">
+        </select>
+      </label><br /><br />
+      <label>Select number of questions (max available): <input type="number" id="numQuestions"
+          min="1" /></label><br /><br />
       <button id="startBtn">Start Quiz</button>
       <small style="color:#8b949e;">Or press Enter to start</small>
     </div>
     <div id="quiz" class="hidden">
       <div id="question" class="question"></div>
       <div id="options"></div>
+      <br />
+      <small style="color:#8b949e;">For multiple-choice questions, you can select / deselect the questions with (1-9)
+        keys</small>
+      <br />
+
       <div id="controls">
         <button id="nextBtn" class="hidden">Next Question</button>
+        <small style="color:#8b949e;">Or press Enter to submit your answer</small>
       </div>
     </div>
   </div>
 
   <script src="terraform_practice_questions_001.js"></script>
+  <script src="kubernetes_practice_questions_001.js"></script>
   <script src="script.js"></script>
 </body>
 
