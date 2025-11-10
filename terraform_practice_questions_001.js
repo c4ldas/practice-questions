@@ -1,4 +1,5 @@
-window.quizData = [
+window.terraformTitle = "Terraform";
+window.terraformQuizData = [
   {
     "question": "When\n multiple arguments with single-line values appear on consecutive lines \nat the same nesting level, HashiCorp recommends that you:",
     "options": [
