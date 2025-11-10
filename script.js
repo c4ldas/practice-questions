@@ -2,11 +2,72 @@ let questions = [];
 let current = 0;
 let score = 0;
 let selected = new Set();
+let quizTitle = "";
 
-function loadQuestions() {
-  questions = window.quizData;
+function getAvailableTopics() {
+  const topics = [];
+  for (const key in window) {
+    if (key.endsWith('QuizData')) {
+      const topicName = key.replace('QuizData', '').toLowerCase();
+      topics.push({
+        value: topicName,
+        label: window[key + 'Title'] || topicName.charAt(0).toUpperCase() + topicName.slice(1)
+      });
+    }
+  }
+  return topics;
 }
 
+
+function populateTopicSelect() {
+  const select = document.getElementById('topicSelect');
+  select.innerHTML = ''; // clear any hardcoded options
+
+  const topics = getAvailableTopics();
+  topics.forEach((topic, index) => {
+    const opt = document.createElement('option');
+    opt.value = topic.value;
+    opt.textContent = topic.label;
+    select.appendChild(opt);
+
+    if (index === 0) updateNumQuestions(topic.value);
+  });
+
+  // update numQuestions when user changes topic
+  select.addEventListener('change', (e) => {
+    updateNumQuestions(e.target.value);
+  });
+}
+
+function updateNumQuestions(topic) {
+  const key = topic + 'QuizData';
+  const numInput = document.getElementById('numQuestions');
+
+  if (window[key]) {
+    const totalQuestions = window[key].length;
+    numInput.max = totalQuestions;
+    numInput.value = totalQuestions; // default to all questions
+  } else {
+    numInput.max = 1;
+    numInput.value = 1;
+  }
+}
+
+
+function loadQuestions(topic) {
+  const key = topic + 'QuizData'; // e.g., 'terraformQuizData'
+  const titleKey = topic + 'Title';
+
+  if (window[key]) {
+    questions = window[key];
+    quizTitle = window[titleKey] || topic.charAt(0).toUpperCase() + topic.slice(1);
+  } else {
+    questions = [];
+    quizTitle = "";
+  }
+}
+
+/* 
 function startQuiz() {
   const num = parseInt(document.getElementById('numQuestions').value);
   const shuffled = questions.sort(() => 0.5 - Math.random()).slice(0, num);
@@ -17,6 +78,36 @@ function startQuiz() {
   document.getElementById('quiz').style.display = 'block';
   showQuestion();
 }
+*/
+
+function startQuiz() {
+  const topic = document.getElementById('topicSelect').value;
+
+  loadQuestions(topic); // only assign questions and title
+
+  if (questions.length === 0) {
+    alert("No questions available for this topic.");
+    return;
+  }
+
+  // Shuffle and limit number of questions
+  const num = parseInt(document.getElementById('numQuestions').value);
+  questions = questions.sort(() => 0.5 - Math.random()).slice(0, num);
+
+  // Reset state
+  current = 0;
+  score = 0;
+  selected.clear();
+
+  // Update title dynamically
+  document.querySelector('.container h1').textContent = quizTitle + " Practice Quiz";
+
+  // Show quiz
+  document.getElementById('setup').style.display = 'none';
+  document.getElementById('quiz').style.display = 'block';
+  showQuestion();
+}
+
 
 function showQuestion() {
   const q = questions[current];
@@ -155,6 +246,9 @@ function nextQuestion() {
 }
 
 
+
+
+
 document.getElementById('startBtn').onclick = startQuiz;
 document.getElementById('nextBtn').onclick = nextQuestion;
 
@@ -200,8 +294,11 @@ document.addEventListener('keydown', (event) => {
   }
 });
 
-// Keyboard support for setup screen
+// Keyboard support for setup screen and populate topic dropdown dynamically
 window.addEventListener('load', () => {
+
+  populateTopicSelect();
+
   const numInput = document.getElementById('numQuestions');
   numInput.focus(); // Auto-focus input when page loads
 
